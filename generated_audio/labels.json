@@ -1,0 +1,49 @@
+{
+  "samples": [
+    {
+      "audio_file": "voice-puck-000.wav",
+      "text": "Alright tech friends, let's talk about the Samsung Galaxy A54. I've been using this phone for a couple of weeks now, and honestly, it's pretty impressive for the price. The screen is gorgeous, really vibrant colors, and the battery life easily gets me through a full day. The camera's a standout too; photos are crisp and clear, especially in good lighting. It definitely feels like a premium phone without the premium price tag. Now, it's not perfect, but for most people, this is a fantastic option. So, if you're in the market for a new mid-range phone, the Galaxy A54 should definitely be on your list. Let me know in the comments what you think and if you have any questions. Don't forget to like and subscribe for more tech reviews!",
+      "duration": 25.76,
+      "speaker_id": "puck",
+      "timestamp": "2025-01-15T00:30:42.360788",
+      "alignment_score": 1.0,
+      "alignment_passed": true
+    },
+    {
+      "audio_file": "voice-puck-001.wav",
+      "text": "Hey everyone, what's up? So, the Pixel 8 is finally here and I've been putting it through its paces. Honestly, the camera improvements are noticeable; photos just pop, especially in low light. And the Ai-powered editing tools? Crazy good. I was messing around with the Magic Eraser the other day and it's like, 'whoa, that's just gone!' Battery life is solid too, I can easily get through a full day of pretty heavy usage. If you're thinking about upgrading, this might be the one. Have any questions about it? Drop them down in the comments and I'll do my best to answer them. Also, don't forget to subscribe for more tech reviews like this!",
+      "duration": 33.56,
+      "speaker_id": "puck",
+      "timestamp": "2025-01-15T00:40:49.138802",
+      "alignment_score": 1.0,
+      "alignment_passed": true
+    },
+    {
+      "audio_file": "voice-aoede-000.wav",
+      "text": "Hey everyone, welcome back to the channel! So, today I wanted to share what I've been living in lately \u2013 my super easy, go-to summer outfit. It's basically this linen button-down shirt, I've got it in a few colors but this light blue is my favorite, paired with some simple denim shorts. I like these because they're not too short and they're really comfortable. I usually throw on some white sneakers, maybe some gold hoops, and that\u2019s it! It\u2019s perfect for running errands, grabbing coffee, or just hanging out. Super comfortable and stylish without trying too hard, you know? Anyway, let me know in the comments what your summer staples are. And don't forget to subscribe for more fashion stuff!",
+      "duration": 14.08,
+      "speaker_id": "aoede",
+      "timestamp": "2025-01-15T00:42:17.175283",
+      "alignment_score": 1.0,
+      "alignment_passed": true
+    },
+    {
+      "audio_file": "voice-aoede-001.wav",
+      "text": "Hey everyone, what\u2019s up? So, lately I've been getting a lot of questions about what I wear on a daily basis, especially now that it\u2019s finally warm. I thought I\u2019d just show you my super easy go-to summer outfit. Basically, it's this linen button-down shirt. It's so breathable, which is key for summer. I like to pair it with these denim shorts. They're comfortable, not too tight, you know? And then, for shoes, usually just my white sneakers, anything comfy. It\u2019s really simple, but it's put together. I feel good in it, which is the important part. What are some of your favorite summer looks? Let me know in the comments below. And, if you enjoyed this little look, please hit that subscribe button. I would really appreciate it.",
+      "duration": 12.84,
+      "speaker_id": "aoede",
+      "timestamp": "2025-01-15T00:44:08.912581",
+      "alignment_score": 1.0,
+      "alignment_passed": true
+    },
+    {
+      "audio_file": "voice-puck-002.wav",
+      "text": "Hey everyone, so today I wanted to chat about my favorite kind of outfit, the super casual, 'I can actually move in this' kind. You know those days when you just want to be comfortable but still look put together? That's what I'm going for. I'm wearing my old Levi's jeans that have seen better days, but they\u2019re so comfy. I paired it with this simple white t-shirt from Uniqlo, and then I just threw on this denim jacket. It's perfect for spring, you know, when it's a little chilly. I finished the look with my white sneakers; they go with everything. What are some of your go-to casual outfits? Let me know in the comments below, I'd love to hear your ideas!",
+      "duration": 33.56,
+      "speaker_id": "puck",
+      "timestamp": "2025-01-15T00:45:41.359835",
+      "alignment_score": 1.0,
+      "alignment_passed": true
+    }
+  ]
+}

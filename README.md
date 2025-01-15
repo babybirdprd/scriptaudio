@@ -1,16 +1,36 @@
-# YouTube Script Audio Generator
+# ScriptAudio
 
-This project uses Google's Gemini Multimodal Live API to generate audio for YouTube scripts with natural-sounding voices. It includes variable replacement for script templates and batch processing capabilities.
+ScriptAudio is a powerful toolkit for generating audio content using Google's Gemini Multimodal Live API. The application combines YouTube script generation and general content generation into a single, user-friendly interface with advanced audio quality controls.
 
-## Features
+## 🌟 Features
 
-- Generate audio from YouTube scripts using Gemini's voices
-- Replace template variables (e.g., [artist_name], [animal]) with AI-generated content
-- Batch process multiple scripts
-- Save audio in WAV format with proper metadata
+### Core Features
+- Generate natural-sounding audio using Gemini's voices
 - Support for all Gemini voices: Aoede, Charon, Fenrir, Kore, Puck
+- Phoneme alignment validation for audio quality
+- Variable replacement with AI-generated content
+- Batch processing capabilities
+- Progress tracking and detailed status updates
+- Save audio in WAV format (24kHz, 16-bit PCM)
+- Comprehensive metadata in labels.json
+- User-friendly Gradio interface
 
-## Setup
+### Content Generation
+- YouTube Scripts:
+  - Generate scripts with proper structure
+  - Choose from various video categories and styles
+  - Support for existing script library
+  - Custom script input
+  - Optimized for YouTube content delivery
+
+- General Content:
+  - Multiple content templates (Stories, Recipes, etc.)
+  - Custom template support
+  - Variable replacement system
+  - Batch generation (1-50 items)
+  - Length optimization (100-200 words)
+
+## 🚀 Setup
 
 1. Create and activate a virtual environment:
 ```bash
@@ -19,137 +39,208 @@ venv\Scripts\activate  # Windows
 source venv/bin/activate  # Unix/macOS
 ```
 
-2. Install dependencies:
+2. Install Python dependencies:
 ```bash
-pip install google-genai opencv-python pyaudio pillow mss gradio
+pip install google-genai opencv-python pyaudio pillow mss gradio phonemizer
 ```
 
-3. Set up your Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+3. Install espeak (required for audio quality validation):
+- Windows: Download and install from [espeak website](http://espeak.sourceforge.net/download.html)
+- Linux: `sudo apt-get install espeak`
+- macOS: `brew install espeak`
 
-## Usage
+4. Get your Gemini API key:
+- Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+- Create a new API key
+- Keep it secure for use in the application
 
-### 1. Preprocess Scripts (Optional)
+Note: If espeak is not installed, the application will still work but audio quality validation will be disabled.
 
-If your scripts contain template variables like [artist_name] or [animal], first run the preprocessing script:
+## 💻 Usage
 
+Run the application:
 ```bash
-python preprocess_scripts.py --api-key YOUR_API_KEY
+python combined_audio_generator.py
 ```
 
-This will:
-- Process all scripts in the `scripts/` directory
-- Replace variables with AI-generated content
-- Save processed scripts to `processed_scripts/`
-- Generate a processing report
+The interface provides two main modes:
 
-### 2. Generate Audio
+1. YouTube Scripts:
+   - Select video category and style
+   - Generate or input custom script
+   - Convert to audio with quality validation
 
-#### Option 1: Batch Processing (Recommended)
-Process all scripts at once with a single voice:
+2. General Content:
+   - Choose content template
+   - Configure variables
+   - Generate single or batch content
+   - Convert to audio with quality checks
 
-```bash
-python batch_generate.py --api-key YOUR_API_KEY --voice Puck
+## 📁 Project Structure
+
+```
+ScriptAudio/
+  ├── combined_audio_generator.py # Main application
+  ├── README.md                  # Documentation
+  ├── LICENSE                    # License file
+  └── generated_audio/           # Output directory
+      ├── labels.json            # Audio metadata
+      └── voice-{name}-{num}.wav # Generated audio files
 ```
 
-This will:
-- Process all scripts sequentially
-- Save WAV files as voice-puck-000.wav, voice-puck-001.wav, etc.
-- Create labels.json with metadata
-- Save everything in generated_audio/
+## 🎵 Audio Output
 
-#### Option 2: Interactive Web Interface
-For individual script processing:
-
-```bash
-python app.py
-```
-
-Then:
-1. Open http://localhost:7860 in your browser
-2. Enter your API key
-3. Select a script and voice
-4. Click Generate Audio
-
-## Output Format
-
-The generated files follow this structure:
-```
-generated_audio/
-  ├── labels.json
-  ├── voice-puck-000.wav
-  ├── voice-puck-001.wav
-  ├── voice-puck-002.wav
-  └── ...
-```
-
-The labels.json file contains metadata:
+The labels.json file now includes quality metrics:
 ```json
 {
   "samples": [
     {
-      "audio_file": "voice-puck-000.wav",
-      "text": "Script content here...",
-      "duration": 2.5,
-      "speaker_id": "puck"
-    },
-    ...
+      "audio_file": "voice-puck-001.wav",
+      "text": "Content text here...",
+      "duration": 32.5,
+      "speaker_id": "puck",
+      "timestamp": "2024-03-20T14:30:00Z",
+      "alignment_score": 0.95,
+      "alignment_passed": true
+    }
   ]
 }
 ```
 
-## Scripts
+## 🛠️ Advanced Features
 
-- `app.py`: Web interface for individual script processing
-- `batch_generate.py`: Process all scripts with one voice
-- `preprocess_scripts.py`: Replace template variables
-- `parse_scripts.py`: Split JSON scripts into individual files
-- `generate_scripts.py`: Generate new YouTube scripts using Gemini
+### Quality Control
+- Phoneme alignment validation (requires espeak)
+- Minimum alignment threshold (0.8)
+- Automatic quality checks
+- Detailed quality metrics in metadata
 
-### Script Generation
 
-You can generate new YouTube scripts using the script generator:
+### Variable Replacement
 
-```bash
-python generate_scripts.py --api-key YOUR_API_KEY --num-scripts 100 --output scripts.json
+Both applications support dynamic variable replacement:
+- Use [variable_name] syntax in your content
+- Variables can be replaced manually or auto-generated
+- AI-powered contextual replacements
+
+Example:
+```
+Theme: [theme]
+Setting: [setting]
+Character: [character_name]
 ```
 
-This will:
-- Generate the specified number of scripts using Gemini's latest model (gemini-1.5-pro-latest)
-- Use structured output with TypedDict schema to ensure consistent JSON format
-- Save scripts in the exact format required by script.json
-- Automatically create numbered files (e.g., scripts.json, scripts_1.json) to prevent overwrites
-- Provide detailed progress and error information during generation
+### Batch Processing
+Efficient handling of multiple items:
+- Parallel processing where possible
+- Progress tracking
+- Error handling and recovery
+- Detailed processing reports
 
-Options:
-- `--api-key`: Your Gemini API key (required)
-- `--num-scripts`: Number of scripts to generate (default: 100)
-- `--output`: Output JSON file (default: generated_scripts.json)
+### Custom Templates
+Create your own templates:
+1. Select "Custom Template"
+2. Define your structure
+3. Add variables using [variable_name]
+4. Set requirements and guidelines
 
-The generated scripts will be in various categories like Tech Review, Gaming, Cooking, etc., and each script will:
-- Have an engaging opening hook
-- Use natural, conversational YouTube style
-- Include audience engagement phrases
-- Be between 100-200 words
-- End with a clear call to action
-- Match the specified style (e.g., energetic, calm, humorous)
+### Voice Customization
+Available voices with different characteristics:
+- Aoede: Warm and engaging
+- Charon: Deep and authoritative
+- Fenrir: Energetic and dynamic
+- Kore: Clear and professional
+- Puck: Friendly and conversational
 
-Output Format:
+## 📊 Performance
+
+Audio Generation:
+- Format: 24kHz WAV, 16-bit PCM
+- Typical Duration: 30-45 seconds per 100-200 words
+- Processing Time: ~5-10 seconds per audio file
+
+Content Generation:
+- Word Count: 100-200 words per item
+- Token Limit: ~512 tokens
+- Generation Time: ~2-3 seconds per item
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📝 Notes
+
+- Audio is generated in real-time using Gemini's latest models
+- Each voice maintains its own sequential numbering
+- Progress is shown during batch processing
+- Labels are updated after each successful generation
+- Error handling includes automatic retries
+- System prompts ensure consistent output quality
+
+## ⚠️ Limitations & API Limits
+
+### API Limits
+- Input Token Limit: 1,048,576 tokens (~1M)
+- Output Token Limit: 8,192 tokens (~8K)
+- Rate Limits:
+  - 10 requests per minute (RPM)
+  - 4 million tokens per minute (TPM)
+  - 1,500 requests per day (RPD)
+
+### Audio Configuration
+- Input Audio: 16kHz, 16-bit PCM
+- Output Audio: 24kHz, 16-bit PCM
+- Mono Channel
+- Batch Size: Up to 100 items
+- Session Duration: 15 minutes max
+
+### Content Limits
+- Text Length: 10-200 words per item
+- Alignment Score Threshold: 0.8
+- Audio Duration: Optimized for 45 seconds or less
+
+## 🎵 Audio Output
+
+Generated audio files follow this naming convention:
+```bash
+voice-{voice_name}-{sequential_number}.wav
+Example: voice-puck-001.wav
+```
+
+The labels.json file contains detailed metadata:
 ```json
 {
-  "response": "[{\"title\": \"Script Title\", \"script\": \"Script Content\"}, ...]"
+  "samples": [
+    {
+      "audio_file": "voice-puck-001.wav",
+      "text": "Content text here...",
+      "duration": 32.5,
+      "speaker_id": "puck",
+      "timestamp": "2024-03-20T14:30:00Z",
+      "alignment_score": 0.95,
+      "alignment_passed": true
+    }
+  ]
 }
 ```
 
-Features:
-- Robust error handling with retries for failed generations
-- JSON validation to ensure proper structure
-- Progress tracking with script titles
-- Automatic file numbering to prevent data loss
+## 🔒 Security
 
-## Notes
+- API keys are handled securely
+- No data is stored externally
+- All processing is done locally
+- Output files are saved in local directory
 
-- Audio is generated in 24kHz WAV format with 16-bit PCM encoding
-- Each voice maintains its own sequential numbering
-- The system prompt ensures YouTube-style delivery
-- Progress is shown during batch processing
-- Labels are updated after each successful generation
+## 📚 Resources
+
+- [Gemini API Documentation](https://ai.google.dev/docs)
+- [Gradio Documentation](https://gradio.app/docs/)
+- [Python Audio Processing](https://docs.python.org/3/library/wave.html)
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

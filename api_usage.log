@@ -1,0 +1,154 @@
+2025-01-14 22:14:07,747 - INFO - Rate limiter initialized
+2025-01-14 22:14:08,427 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 22:14:08,458 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 22:14:08,534 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 22:14:34,448 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:14:53,829 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 22:14:53,829 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:15:02,804 - INFO - API request - Minute: 2/10, Tokens: 168/4000000, Day: 2/1500
+2025-01-14 22:15:02,986 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 22:23:11,987 - INFO - Rate limiter initialized
+2025-01-14 22:23:12,706 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 22:23:12,737 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 22:23:12,790 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 22:23:49,126 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:24:07,991 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 22:24:07,991 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:30:36,888 - INFO - Rate limiter initialized
+2025-01-14 22:30:37,656 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 22:30:37,676 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 22:30:37,740 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 22:32:16,052 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:32:20,056 - INFO - Rate limit reset - Previous minute: 0 requests, 0 tokens
+2025-01-14 22:32:20,056 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 22:32:20,056 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:32:49,144 - INFO - API request - Minute: 2/10, Tokens: 173/4000000, Day: 2/1500
+2025-01-14 22:32:49,323 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 22:40:16,030 - INFO - Rate limiter initialized
+2025-01-14 22:40:16,811 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 22:40:16,834 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 22:40:16,851 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 22:40:55,417 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:41:08,637 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 22:41:08,637 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:42:22,129 - INFO - Rate limit reset - Previous minute: 1 requests, 0 tokens
+2025-01-14 22:42:22,129 - INFO - API request - Minute: 1/10, Tokens: 143/4000000, Day: 2/1500
+2025-01-14 22:42:22,313 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 22:50:31,080 - INFO - Rate limiter initialized
+2025-01-14 22:50:32,079 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 22:50:32,125 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 22:50:32,153 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 22:50:58,561 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 22:50:58,561 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:51:13,727 - INFO - API request - Minute: 2/10, Tokens: 150/4000000, Day: 2/1500
+2025-01-14 22:51:13,884 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 22:56:16,915 - INFO - Rate limiter initialized
+2025-01-14 22:56:17,637 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 22:56:17,668 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 22:56:17,694 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 22:56:30,764 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 22:56:30,764 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 22:56:58,730 - INFO - API request - Minute: 2/10, Tokens: 142/4000000, Day: 2/1500
+2025-01-14 22:56:58,913 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 23:16:35,181 - INFO - Rate limiter initialized
+2025-01-14 23:16:35,950 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:16:35,979 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:16:36,002 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:16:49,920 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 23:16:49,921 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 23:16:58,487 - INFO - API request - Minute: 2/10, Tokens: 144/4000000, Day: 2/1500
+2025-01-14 23:16:58,488 - ERROR - Audio generation error: AsyncLive.connect() got an unexpected keyword argument 'system_instruction'
+2025-01-14 23:18:19,346 - INFO - Rate limiter initialized
+2025-01-14 23:18:20,047 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:18:20,076 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:18:20,110 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:19:18,742 - INFO - Rate limiter initialized
+2025-01-14 23:19:19,559 - INFO - HTTP Request: GET http://127.0.0.1:7861/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:19:19,575 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:19:19,593 - INFO - HTTP Request: HEAD http://127.0.0.1:7861/ "HTTP/1.1 200 OK"
+2025-01-14 23:19:39,247 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 23:19:39,247 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 23:19:53,626 - INFO - API request - Minute: 2/10, Tokens: 151/4000000, Day: 2/1500
+2025-01-14 23:19:53,814 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 23:19:53,841 - ERROR - Audio generation error: AsyncSession.send() takes 1 positional argument but 2 positional arguments (and 1 keyword-only argument) were given
+2025-01-14 23:20:52,794 - INFO - Rate limiter initialized
+2025-01-14 23:20:53,570 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:20:53,622 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:20:53,654 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:21:26,772 - INFO - Rate limiter initialized
+2025-01-14 23:21:27,569 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:21:27,602 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:21:27,602 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:21:43,778 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 23:21:43,778 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 23:21:53,085 - INFO - API request - Minute: 2/10, Tokens: 179/4000000, Day: 2/1500
+2025-01-14 23:21:53,358 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 23:21:53,379 - ERROR - Audio generation error: AsyncSession.send() got an unexpected keyword argument 'content'
+2025-01-14 23:23:31,921 - INFO - Rate limiter initialized
+2025-01-14 23:23:32,697 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:23:32,715 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:23:32,715 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:23:43,161 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 23:23:43,162 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 23:23:45,937 - INFO - API request - Minute: 2/10, Tokens: 141/4000000, Day: 2/1500
+2025-01-14 23:23:46,120 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 23:23:46,147 - ERROR - Audio generation error: AsyncSession.send() takes 1 positional argument but 2 positional arguments (and 1 keyword-only argument) were given
+2025-01-14 23:26:51,034 - INFO - Rate limiter initialized
+2025-01-14 23:26:51,935 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:26:51,951 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:26:51,992 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:27:05,578 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 23:27:05,580 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 23:27:13,910 - INFO - API request - Minute: 2/10, Tokens: 179/4000000, Day: 2/1500
+2025-01-14 23:27:14,075 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 23:27:14,097 - ERROR - Audio generation error: AsyncSession.send() takes 1 positional argument but 2 positional arguments (and 1 keyword-only argument) were given
+2025-01-14 23:31:06,311 - INFO - Rate limiter initialized
+2025-01-14 23:31:07,108 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:31:07,124 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:31:07,152 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:31:16,050 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 23:31:16,050 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 23:31:19,703 - INFO - API request - Minute: 2/10, Tokens: 163/4000000, Day: 2/1500
+2025-01-14 23:31:19,867 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 23:47:08,242 - INFO - Rate limiter initialized
+2025-01-14 23:47:08,949 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:47:08,989 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:47:09,005 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:47:25,264 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-14 23:47:25,264 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-14 23:47:27,236 - INFO - API request - Minute: 2/10, Tokens: 134/4000000, Day: 2/1500
+2025-01-14 23:47:27,408 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-14 23:55:55,280 - INFO - Rate limiter initialized
+2025-01-14 23:55:55,995 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:55:56,035 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:55:56,071 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:56:29,190 - INFO - Rate limiter initialized
+2025-01-14 23:56:29,880 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-14 23:56:29,912 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-14 23:56:30,003 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-14 23:58:23,019 - INFO - Rate limit reset - Previous minute: 0 requests, 0 tokens
+2025-01-14 23:58:23,019 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-15 00:09:34,382 - INFO - Rate limiter initialized
+2025-01-15 00:09:35,289 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-15 00:09:35,322 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-15 00:09:35,326 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-15 00:11:19,074 - INFO - Rate limiter initialized
+2025-01-15 00:11:19,881 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-15 00:11:19,904 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-15 00:11:19,921 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-15 00:12:27,474 - INFO - Rate limit reset - Previous minute: 0 requests, 0 tokens
+2025-01-15 00:12:27,474 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-15 00:25:39,202 - INFO - Rate limiter initialized
+2025-01-15 00:25:40,342 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-15 00:25:40,710 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-15 00:25:40,720 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-15 00:25:58,724 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-15 00:29:55,836 - INFO - Rate limiter initialized
+2025-01-15 00:29:56,658 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-15 00:29:56,694 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-15 00:29:56,728 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-15 00:30:13,959 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-15 00:30:13,959 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 00:30:15,888 - INFO - API request - Minute: 2/10, Tokens: 131/4000000, Day: 2/1500
+2025-01-15 00:30:16,061 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 00:40:00,749 - INFO - Rate limiter initialized
