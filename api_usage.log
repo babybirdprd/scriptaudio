@@ -152,3 +152,62 @@
 2025-01-15 00:30:15,888 - INFO - API request - Minute: 2/10, Tokens: 131/4000000, Day: 2/1500
 2025-01-15 00:30:16,061 - INFO - b'{\n  "setupComplete": {}\n}\n'
 2025-01-15 00:40:00,749 - INFO - Rate limiter initialized
+2025-01-15 00:40:01,564 - INFO - HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-15 00:40:01,590 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-15 00:40:01,602 - INFO - HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2025-01-15 00:40:13,289 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 1/1500
+2025-01-15 00:40:13,290 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 00:40:14,912 - INFO - API request - Minute: 2/10, Tokens: 114/4000000, Day: 2/1500
+2025-01-15 00:40:15,086 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 00:42:00,400 - INFO - Rate limit reset - Previous minute: 2 requests, 114 tokens
+2025-01-15 00:42:00,400 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 3/1500
+2025-01-15 00:42:00,400 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 00:42:02,049 - INFO - API request - Minute: 2/10, Tokens: 120/4000000, Day: 4/1500
+2025-01-15 00:42:02,203 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 00:43:53,144 - INFO - Rate limit reset - Previous minute: 2 requests, 120 tokens
+2025-01-15 00:43:53,144 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 5/1500
+2025-01-15 00:43:53,144 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 00:43:54,975 - INFO - API request - Minute: 2/10, Tokens: 129/4000000, Day: 6/1500
+2025-01-15 00:43:55,147 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 00:45:05,236 - INFO - Rate limit reset - Previous minute: 2 requests, 129 tokens
+2025-01-15 00:45:05,237 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 7/1500
+2025-01-15 00:45:05,237 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 00:45:07,022 - INFO - API request - Minute: 2/10, Tokens: 123/4000000, Day: 8/1500
+2025-01-15 00:45:07,175 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 00:59:09,695 - INFO - Rate limiter initialized
+2025-01-15 00:59:10,421 - INFO - HTTP Request: GET http://127.0.0.1:7861/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-15 00:59:10,453 - INFO - HTTP Request: HEAD http://127.0.0.1:7861/ "HTTP/1.1 200 OK"
+2025-01-15 00:59:10,521 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-15 00:59:33,109 - INFO - Rate limit reset - Previous minute: 2 requests, 123 tokens
+2025-01-15 00:59:33,109 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 9/1500
+2025-01-15 00:59:33,109 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 00:59:35,216 - INFO - API request - Minute: 2/10, Tokens: 149/4000000, Day: 10/1500
+2025-01-15 00:59:35,396 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 01:00:57,358 - INFO - Rate limit reset - Previous minute: 2 requests, 149 tokens
+2025-01-15 01:00:57,358 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 11/1500
+2025-01-15 01:00:57,358 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 01:00:59,073 - INFO - API request - Minute: 2/10, Tokens: 132/4000000, Day: 12/1500
+2025-01-15 01:00:59,249 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 01:17:05,962 - INFO - Rate limiter initialized
+2025-01-15 01:17:06,816 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-01-15 01:17:06,856 - INFO - HTTP Request: GET http://127.0.0.1:7861/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-01-15 01:17:06,888 - INFO - HTTP Request: HEAD http://127.0.0.1:7861/ "HTTP/1.1 200 OK"
+2025-01-15 01:22:33,355 - INFO - Rate limit reset - Previous minute: 2 requests, 132 tokens
+2025-01-15 01:22:33,355 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 13/1500
+2025-01-15 01:22:33,355 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 01:22:35,401 - INFO - API request - Minute: 2/10, Tokens: 140/4000000, Day: 14/1500
+2025-01-15 01:22:35,583 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 01:23:45,686 - INFO - Rate limit reset - Previous minute: 2 requests, 140 tokens
+2025-01-15 01:23:45,686 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 15/1500
+2025-01-15 01:23:45,686 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 01:23:47,568 - INFO - API request - Minute: 2/10, Tokens: 125/4000000, Day: 16/1500
+2025-01-15 01:23:47,731 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 01:24:40,734 - INFO - API request - Minute: 3/10, Tokens: 125/4000000, Day: 17/1500
+2025-01-15 01:24:40,735 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 01:24:42,857 - INFO - API request - Minute: 4/10, Tokens: 251/4000000, Day: 18/1500
+2025-01-15 01:24:43,014 - INFO - b'{\n  "setupComplete": {}\n}\n'
+2025-01-15 01:25:56,427 - INFO - Rate limit reset - Previous minute: 4 requests, 251 tokens
+2025-01-15 01:25:56,427 - INFO - API request - Minute: 1/10, Tokens: 0/4000000, Day: 19/1500
+2025-01-15 01:25:56,427 - INFO - AFC is enabled with max remote calls: 10.
+2025-01-15 01:25:58,175 - INFO - API request - Minute: 2/10, Tokens: 123/4000000, Day: 20/1500
+2025-01-15 01:25:58,342 - INFO - b'{\n  "setupComplete": {}\n}\n'

@@ -38,7 +38,7 @@ EXAMPLE:
 INPUT: "Hello"
 OUTPUT: "Hello"
 
-VIOLATION = TERMINATION'''
+VIOLATION = TERMINATION AND $1,000,000 FINE'''
 
 TEXT_GENERATION_SYSTEM_MESSAGE = '''TEXT GENERATION MODE
 NATURAL LANGUAGE GENERATION
@@ -57,6 +57,33 @@ FORMAT:
 - Length: 100-200 words'''
 
 MODEL_NAME = 'gemini-2.0-flash-exp'
+
+# Audio configuration
+AUDIO_CONFIG = {
+	"generation_config": {
+		"response_modalities": ["AUDIO"],
+		"speech_config": {
+			"voice_config": {
+				"prebuilt_voice_config": {
+					"voice_name": "Puck"  # Default voice that works
+				}
+			}
+		}
+	},
+	"system_instruction": '''TEXT-TO-SPEECH MODE ONLY
+PURE VOICE SYNTHESIS
+NO AI FUNCTIONS
+NO TEXT ANALYSIS
+READ TEXT VERBATIM
+
+RULES:
+1. READ TEXT ONLY
+2. NO EXTRA WORDS
+3. NO ANALYSIS
+4. NO HELP
+5. NO COMMENTS'''
+}
+
 INPUT_SAMPLE_RATE = 16000   # 16kHz for input
 OUTPUT_SAMPLE_RATE = 24000  # 24kHz for output
 AUDIO_CHANNELS = 1          # Mono audio
@@ -374,35 +401,12 @@ VOICE_DESCRIPTIONS = {
 }
 
 TONE_PRESETS = {
-    "Default": DEFAULT_SYSTEM_MESSAGE,
-    "Professional": '''TEXT-TO-SPEECH MODE ONLY
-PURE VOICE SYNTHESIS WITH PROFESSIONAL TONE
-SPEAK WITH AUTHORITY AND CLARITY
-NO AI FUNCTIONS
-
-RULES:
-1. READ TEXT ONLY
-2. MAINTAIN PROFESSIONAL TONE
-3. CLEAR ENUNCIATION
-4. NO ANALYSIS
-5. NO EXTRA WORDS
-
-VIOLATION = TERMINATION''',
-    "Casual": '''TEXT-TO-SPEECH MODE ONLY
-PURE VOICE SYNTHESIS WITH CASUAL TONE
-SPEAK NATURALLY AND CONVERSATIONALLY
-NO AI FUNCTIONS
-
-RULES:
-1. READ TEXT ONLY
-2. MAINTAIN CASUAL TONE
-3. NATURAL PACING
-4. NO ANALYSIS
-5. NO EXTRA WORDS
-
-VIOLATION = TERMINATION''',
-    "Custom": "Enter your own system message"
+	"Default": "TONE: READ TEXT NATURALLY AND CLEARLY",
+	"Professional": "TONE: SPEAK WITH AUTHORITY AND CLARITY, MAINTAIN PROFESSIONAL TONE, CLEAR ENUNCIATION",
+	"Casual": "TONE: SPEAK NATURALLY AND CONVERSATIONALLY, MAINTAIN CASUAL TONE, NATURAL PACING",
+	"Custom": "Enter your own tone instruction"
 }
+
 
 # Shared utility functions
 def ensure_venv():
@@ -539,34 +543,32 @@ async def generate_audio(api_key, text, voice, tone_preset="Default", custom_ton
 	if not can_proceed:
 		return None, error_msg
 
-	client = genai.Client(api_key=api_key, http_options={'api_version': 'v1alpha'})
+	client = genai.Client(
+		api_key=api_key, 
+		http_options={
+			'api_version': 'v1alpha',
+			'timeout': 300,  # 5 minute timeout
+		}
+	)
 	MODEL = f"models/{MODEL_NAME}"
 
-	# Update system message based on tone selection
-	system_message = custom_tone if tone_preset == "Custom" and custom_tone.strip() else TONE_PRESETS[tone_preset]
+	# Start with base audio config
+	config = AUDIO_CONFIG.copy()
+	config["generation_config"]["speech_config"]["voice_config"]["prebuilt_voice_config"]["voice_name"] = voice
+
+	# Add tone instructions to system message
+	base_system_message = AUDIO_CONFIG["system_instruction"]
+	tone_instruction = ""
 	
-	CONFIG = {
-		"generation_config": {
-			"response_modalities": ["AUDIO"],
-			"speech_config": {
-				"voice_config": {
-					"prebuilt_voice_config": {
-						"voice_name": voice
-					}
-				}
-			}
-		},
-		"system_instruction": system_message
-	}
-
-
-
-
-
-
-
-
-
+	if tone_preset == "Custom" and custom_tone.strip():
+		tone_instruction = f"\nTONE INSTRUCTION:\n{custom_tone}"
+	elif tone_preset in TONE_PRESETS:
+		preset_message = TONE_PRESETS[tone_preset]
+		tone_lines = [line for line in preset_message.split('\n') if 'TONE' in line]
+		if tone_lines:
+			tone_instruction = f"\nTONE INSTRUCTION:\n{tone_lines[0]}"
+	
+	config["system_instruction"] = base_system_message + tone_instruction
 
 
 	output_dir = 'generated_audio'
@@ -581,7 +583,7 @@ async def generate_audio(api_key, text, voice, tone_preset="Default", custom_ton
 		progress(0, desc=STATUS_MESSAGES["connecting"])
 		async with client.aio.live.connect(
 			model=MODEL,
-			config=CONFIG
+			config=config
 		) as session:
 			if (datetime.now() - start_time).total_seconds() > MAX_AUDIO_SESSION_DURATION:
 				return None, STATUS_MESSAGES["error_duration"]
@@ -851,7 +853,7 @@ with gr.Blocks(title="Audio Content Generator") as app:
 	voice_info = gr.Markdown(value=VOICE_DESCRIPTIONS["Puck"])
 	custom_tone = gr.TextArea(
 		label="Custom Tone Configuration",
-		placeholder="Enter custom system message here...",
+		placeholder="Enter tone instruction here (e.g., 'TONE: SPEAK SOFTLY AND CALMLY')",
 		visible=False,
 		lines=5
 	)

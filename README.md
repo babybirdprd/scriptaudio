@@ -1,34 +1,36 @@
-# ScriptAudio
+# Audio Content Generator
 
-ScriptAudio is a powerful toolkit for generating audio content using Google's Gemini Multimodal Live API. The application combines YouTube script generation and general content generation into a single, user-friendly interface with advanced audio quality controls.
+A powerful application for generating high-quality audio content using Google's Gemini Multimodal Live API. Generate YouTube scripts, blog posts, and other content with customizable voices and tones.
 
 ## 🌟 Features
 
-### Core Features
-- Generate natural-sounding audio using Gemini's voices
-- Support for all Gemini voices: Aoede, Charon, Fenrir, Kore, Puck
-- Phoneme alignment validation for audio quality
-- Variable replacement with AI-generated content
-- Batch processing capabilities
-- Progress tracking and detailed status updates
-- Save audio in WAV format (24kHz, 16-bit PCM)
-- Comprehensive metadata in labels.json
-- User-friendly Gradio interface
+### Audio Generation
+- Text-to-speech using Gemini's Multimodal Live API
+- Multiple voice options with distinct characteristics:
+  - Aoede: Warm and engaging - perfect for storytelling
+  - Charon: Deep and authoritative - ideal for educational content
+  - Fenrir: Energetic and dynamic - great for gaming content
+  - Kore: Clear and professional - suited for tutorials
+  - Puck: Friendly and conversational - best for vlogs
+- Customizable voice tones:
+  - Default: Natural and clear reading
+  - Professional: Authoritative with clear enunciation
+  - Casual: Natural and conversational
+  - Custom: Define your own tone instructions
+- High-quality audio output (24kHz, 16-bit PCM)
+- Audio quality validation with phoneme alignment
 
 ### Content Generation
 - YouTube Scripts:
-  - Generate scripts with proper structure
-  - Choose from various video categories and styles
-  - Support for existing script library
-  - Custom script input
-  - Optimized for YouTube content delivery
-
+  - Multiple categories (Tech, Gaming, Cooking, etc.)
+  - Various styles (energetic, calm, humorous, etc.)
+  - Structured output with hook and call-to-action
 - General Content:
-  - Multiple content templates (Stories, Recipes, etc.)
-  - Custom template support
-  - Variable replacement system
-  - Batch generation (1-50 items)
-  - Length optimization (100-200 words)
+  - Blog posts, product reviews, tutorials
+  - Multiple niches and topics
+  - Natural, conversational style
+- Batch processing support
+- Word count optimization (100-200 words)
 
 ## 🚀 Setup
 
@@ -39,208 +41,66 @@ venv\Scripts\activate  # Windows
 source venv/bin/activate  # Unix/macOS
 ```
 
-2. Install Python dependencies:
+2. Install dependencies:
 ```bash
-pip install google-genai opencv-python pyaudio pillow mss gradio phonemizer
+pip install google-genai gradio phonemizer wave
 ```
 
-3. Install espeak (required for audio quality validation):
-- Windows: Download and install from [espeak website](http://espeak.sourceforge.net/download.html)
+3. Optional: Install espeak for audio quality validation:
+- Windows: Download from [espeak website](http://espeak.sourceforge.net/download.html)
 - Linux: `sudo apt-get install espeak`
 - macOS: `brew install espeak`
 
-4. Get your Gemini API key:
-- Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-- Create a new API key
-- Keep it secure for use in the application
+4. Get your Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
 
-Note: If espeak is not installed, the application will still work but audio quality validation will be disabled.
 
 ## 💻 Usage
 
-Run the application:
+1. Run the application:
 ```bash
 python combined_audio_generator.py
 ```
 
-The interface provides two main modes:
+2. Enter your Gemini API key
+3. Choose content type (YouTube Scripts or General Content)
+4. Configure settings:
+   - Select voice
+   - Choose tone preset or enter custom tone
+   - Set content parameters
+5. Generate content and audio
 
-1. YouTube Scripts:
-   - Select video category and style
-   - Generate or input custom script
-   - Convert to audio with quality validation
-
-2. General Content:
-   - Choose content template
-   - Configure variables
-   - Generate single or batch content
-   - Convert to audio with quality checks
-
-## 📁 Project Structure
-
-```
-ScriptAudio/
-  ├── combined_audio_generator.py # Main application
-  ├── README.md                  # Documentation
-  ├── LICENSE                    # License file
-  └── generated_audio/           # Output directory
-      ├── labels.json            # Audio metadata
-      └── voice-{name}-{num}.wav # Generated audio files
-```
-
-## 🎵 Audio Output
-
-The labels.json file now includes quality metrics:
-```json
-{
-  "samples": [
-    {
-      "audio_file": "voice-puck-001.wav",
-      "text": "Content text here...",
-      "duration": 32.5,
-      "speaker_id": "puck",
-      "timestamp": "2024-03-20T14:30:00Z",
-      "alignment_score": 0.95,
-      "alignment_passed": true
-    }
-  ]
-}
-```
-
-## 🛠️ Advanced Features
-
-### Quality Control
-- Phoneme alignment validation (requires espeak)
-- Minimum alignment threshold (0.8)
-- Automatic quality checks
-- Detailed quality metrics in metadata
-
-
-### Variable Replacement
-
-Both applications support dynamic variable replacement:
-- Use [variable_name] syntax in your content
-- Variables can be replaced manually or auto-generated
-- AI-powered contextual replacements
-
-Example:
-```
-Theme: [theme]
-Setting: [setting]
-Character: [character_name]
-```
-
-### Batch Processing
-Efficient handling of multiple items:
-- Parallel processing where possible
-- Progress tracking
-- Error handling and recovery
-- Detailed processing reports
-
-### Custom Templates
-Create your own templates:
-1. Select "Custom Template"
-2. Define your structure
-3. Add variables using [variable_name]
-4. Set requirements and guidelines
-
-### Voice Customization
-Available voices with different characteristics:
-- Aoede: Warm and engaging
-- Charon: Deep and authoritative
-- Fenrir: Energetic and dynamic
-- Kore: Clear and professional
-- Puck: Friendly and conversational
-
-## 📊 Performance
-
-Audio Generation:
-- Format: 24kHz WAV, 16-bit PCM
-- Typical Duration: 30-45 seconds per 100-200 words
-- Processing Time: ~5-10 seconds per audio file
-
-Content Generation:
-- Word Count: 100-200 words per item
-- Token Limit: ~512 tokens
-- Generation Time: ~2-3 seconds per item
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📝 Notes
-
-- Audio is generated in real-time using Gemini's latest models
-- Each voice maintains its own sequential numbering
-- Progress is shown during batch processing
-- Labels are updated after each successful generation
-- Error handling includes automatic retries
-- System prompts ensure consistent output quality
-
-## ⚠️ Limitations & API Limits
+## 📊 Technical Details
 
 ### API Limits
-- Input Token Limit: 1,048,576 tokens (~1M)
-- Output Token Limit: 8,192 tokens (~8K)
-- Rate Limits:
-  - 10 requests per minute (RPM)
-  - 4 million tokens per minute (TPM)
-  - 1,500 requests per day (RPD)
+- Requests: 10 per minute
+- Tokens: 4M per minute
+- Daily limit: 1,500 requests
 
 ### Audio Configuration
-- Input Audio: 16kHz, 16-bit PCM
-- Output Audio: 24kHz, 16-bit PCM
-- Mono Channel
-- Batch Size: Up to 100 items
-- Session Duration: 15 minutes max
+- Input sample rate: 16kHz
+- Output sample rate: 24kHz
+- Format: WAV, mono, 16-bit PCM
+- Session duration: 15 minutes max
 
 ### Content Limits
-- Text Length: 10-200 words per item
-- Alignment Score Threshold: 0.8
-- Audio Duration: Optimized for 45 seconds or less
+- Word count: 10-200 words
+- Alignment threshold: 0.8
+- Batch size: Up to 100 items
 
-## 🎵 Audio Output
+## 📁 Output
 
-Generated audio files follow this naming convention:
-```bash
-voice-{voice_name}-{sequential_number}.wav
-Example: voice-puck-001.wav
-```
+Generated files are saved in the `generated_audio` directory:
+- Audio files: `voice-{name}-{number}.wav`
+- Metadata: `labels.json` with quality metrics
 
-The labels.json file contains detailed metadata:
-```json
-{
-  "samples": [
-    {
-      "audio_file": "voice-puck-001.wav",
-      "text": "Content text here...",
-      "duration": 32.5,
-      "speaker_id": "puck",
-      "timestamp": "2024-03-20T14:30:00Z",
-      "alignment_score": 0.95,
-      "alignment_passed": true
-    }
-  ]
-}
-```
+## ⚠️ Notes
 
-## 🔒 Security
-
-- API keys are handled securely
-- No data is stored externally
-- All processing is done locally
-- Output files are saved in local directory
-
-## 📚 Resources
-
-- [Gemini API Documentation](https://ai.google.dev/docs)
-- [Gradio Documentation](https://gradio.app/docs/)
-- [Python Audio Processing](https://docs.python.org/3/library/wave.html)
+- Audio quality validation requires espeak
+- All voices use strict text-to-speech mode
+- Tone presets modify speaking style while maintaining verbatim reading
+- Custom tones should follow the format: "TONE: [instruction]"
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
