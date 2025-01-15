@@ -838,6 +838,7 @@ with gr.Blocks(title="Audio Content Generator") as app:
 			content_generate_btn = gr.Button("Generate Content and Audio", size="large")
 
 	# Voice and Tone Configuration
+	# TODO: Fix tone/system message issue
 	with gr.Row():
 		voice = gr.Dropdown(
 			choices=VOICES,
@@ -846,7 +847,7 @@ with gr.Blocks(title="Audio Content Generator") as app:
 		)
 		tone_preset = gr.Dropdown(
 			choices=list(TONE_PRESETS.keys()),
-			label="Voice Tone Preset",
+			label="Voice Tone Preset - BROKEN DO NOT TOUCH",
 			value="Default"
 		)
 
