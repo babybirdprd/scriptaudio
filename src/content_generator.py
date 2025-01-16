@@ -8,17 +8,21 @@ async def generate_youtube_script(api_key: str, category: str, style: str) -> di
 	"""Generate a YouTube script with specified category and style"""
 	client = genai.Client(api_key=api_key)
 	
-	prompt = f"""Create a natural, conversational YouTube script ({category}, {style} style):
-Rules:
-- No stage directions or actions in parentheses
-- No all-caps words (use normal capitalization)
-- No emojis or special characters
-- Natural speaking style without excessive excitement
-- No placeholders or variables - use specific examples
-- 100-200 words
-- Include: Hook, main content, call to action
+	prompt = f"""Create a YouTube script for {category} in {style} style.
+Format the response as JSON with exactly this structure:
+{{
+	"title": "Video Title Here",
+	"script": "Full script content here"
+}}
 
-Format: Return only valid JSON with "title" and "script" fields"""
+Requirements:
+- Natural, conversational script
+- No stage directions or actions in parentheses
+- No all-caps words
+- No emojis or special characters
+- 100-200 words
+- Include hook, main content, and call to action
+- Return ONLY valid JSON, no other text"""
 	
 	try:
 		response = client.models.generate_content(
@@ -27,22 +31,44 @@ Format: Return only valid JSON with "title" and "script" fields"""
 		)
 
 		text = response.text.strip()
-		if text.startswith('```json'):
-			text = text[7:]
+		
+		# Remove any markdown code block markers
+		if text.startswith('```'):
+			text = text.split('\n', 1)[1]
 		if text.endswith('```'):
-			text = text[:-3]
-		script_data = json.loads(text.strip())
+			text = text.rsplit('\n', 1)[0]
 		
-		# Clean up the response
-		script_data['title'] = script_data['title'].replace('🔥', '').replace('😮', '').strip()
-		script_data['script'] = script_data['script'].replace('(', '').replace(')', '')
+		# Remove any "json" language identifier
+		if text.startswith('json'):
+			text = text.split('\n', 1)[1]
+			
+		# Clean the text before JSON parsing
+		text = text.strip()
 		
-		return script_data
-	except json.JSONDecodeError:
-		return {
-			"title": f"{category} Video - {datetime.now().strftime('%Y%m%d_%H%M%S')}",
-			"script": response.text.strip()
-		}
+		try:
+			script_data = json.loads(text)
+			
+			# Validate required fields
+			if not isinstance(script_data, dict) or 'title' not in script_data or 'script' not in script_data:
+				raise ValueError("Invalid script format")
+				
+			# Clean up the response
+			script_data['title'] = script_data['title'].replace('🔥', '').replace('😮', '').strip()
+			script_data['script'] = script_data['script'].replace('(', '').replace(')', '').strip()
+			
+			if not script_data['title'] or not script_data['script']:
+				raise ValueError("Empty title or script")
+				
+			return script_data
+			
+		except json.JSONDecodeError as je:
+			logging.error(f"JSON parsing error: {str(je)}\nResponse text: {text}")
+			# Attempt to create a structured response from unstructured text
+			return {
+				"title": f"{category} Video - {datetime.now().strftime('%Y%m%d_%H%M%S')}",
+				"script": text
+			}
+			
 	except Exception as e:
 		logging.error(f"Error generating YouTube script: {str(e)}")
 		raise

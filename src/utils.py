@@ -11,9 +11,10 @@ class RateLimit:
 		self.last_reset = datetime.now()
 		self.daily_requests = 0
 		self.daily_reset = date.today()
+		self.batch_requests = {}  # Track batch requests
 		logging.info("Rate limiter initialized")
 	
-	def check_and_update(self, tokens: int = 0) -> tuple[bool, str]:
+	def check_and_update(self, tokens: int = 0, batch_id: str = None) -> tuple[bool, str]:
 		now = datetime.now()
 		
 		# Reset counters if minute has passed
@@ -22,6 +23,7 @@ class RateLimit:
 			self.requests = 0
 			self.tokens = 0
 			self.last_reset = now
+			self.batch_requests = {}  # Reset batch tracking
 		
 		# Reset daily counter if day has changed
 		if now.date() != self.daily_reset:
@@ -29,7 +31,18 @@ class RateLimit:
 			self.daily_requests = 0
 			self.daily_reset = now.date()
 		
-		# Check limits
+		# Track batch requests
+		if batch_id:
+			if batch_id not in self.batch_requests:
+				self.batch_requests[batch_id] = 0
+			self.batch_requests[batch_id] += 1
+			
+			# Check batch-specific limits
+			if self.batch_requests[batch_id] > MAX_BATCH_SIZE:
+				logging.warning(f"Batch limit exceeded for {batch_id}: {self.batch_requests[batch_id]}/{MAX_BATCH_SIZE}")
+				return False, f"Batch limit exceeded: {MAX_BATCH_SIZE} items per batch"
+		
+		# Check general limits
 		if self.requests >= RATE_LIMIT_RPM:
 			logging.warning(f"Rate limit exceeded: {self.requests}/{RATE_LIMIT_RPM} RPM")
 			return False, f"Rate limit exceeded: {RATE_LIMIT_RPM} requests per minute"
@@ -62,11 +75,15 @@ def validate_text(text: str) -> tuple[bool, str]:
 
 def validate_batch_size(size: int) -> tuple[bool, str]:
 	"""Validate batch size"""
-	if size < 1:
-		return False, "Batch size must be at least 1"
-	if size > MAX_BATCH_SIZE:
-		return False, f"Batch size too large. Maximum is {MAX_BATCH_SIZE} items."
-	return True, ""
+	try:
+		size = int(size)  # Ensure size is an integer
+		if size < 1:
+			return False, "Batch size must be at least 1"
+		if size > MAX_BATCH_SIZE:
+			return False, f"Batch size too large. Maximum is {MAX_BATCH_SIZE} items."
+		return True, ""
+	except (ValueError, TypeError):
+		return False, "Invalid batch size value"
 
 def ensure_venv():
 	"""Ensure running in virtual environment"""

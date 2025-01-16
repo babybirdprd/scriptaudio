@@ -1,10 +1,14 @@
 import asyncio
 import gradio as gr
 import logging
+from datetime import datetime
+from .utils import RateLimit, validate_text, validate_batch_size, ensure_venv, list_generated_files
 from .audio_utils import generate_audio
 from .content_generator import generate_youtube_script, generate_content
-from .utils import RateLimit, validate_text, validate_batch_size, ensure_venv, list_generated_files
 from .config import *
+
+# Initialize rate limiter
+rate_limiter = RateLimit()
 
 # Configure logging
 logging.basicConfig(
@@ -13,8 +17,6 @@ logging.basicConfig(
 	format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-# Initialize rate limiter
-rate_limiter = RateLimit()
 
 async def handle_script_only(api_key, category, style, num_items):
 	try:
@@ -95,51 +97,97 @@ Generate high-quality audio content using Gemini's Multimodal Live API.
 
 async def handle_youtube_script(api_key, category, style, num_items, voice, tone_preset, custom_tone):
 	try:
+		# Validate batch size first
+		valid, message = validate_batch_size(num_items)
+		if not valid:
+			yield tuple(
+				[message] +
+				[None] * 10 +
+				[message]
+			)
+			return
+
+		# Generate a unique batch ID
+		batch_id = f"youtube_script_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 		scripts = []
 		audio_files = []
 		status_messages = []
 		
 		# Generate scripts with progress updates
 		for i in range(int(num_items)):
-			script = await generate_youtube_script(api_key, category, style)
-			scripts.append(script)
-			# Update UI with empty audio components
-			audio_updates = [None] * 10
-			yield tuple(["\n\n---\n\n".join(f"Title: {s['title']}\n\n{s['script']}" for s in scripts)] + 
-					   audio_updates + 
-					   [f"Generated {len(scripts)} scripts..."])
+			try:
+				# Check rate limits with batch tracking
+				valid, message = rate_limiter.check_and_update(tokens=0, batch_id=batch_id)
+				if not valid:
+					status_messages.append(message)
+					yield tuple(
+						["\n\n---\n\n".join(f"Title: {s['title']}\n\n{s['script']}" for s in scripts)] +
+						[None] * 10 +
+						[message]
+					)
+					return
+
+				script = await generate_youtube_script(api_key, category, style)
+				if script and 'title' in script and 'script' in script:
+					scripts.append(script)
+					# Update UI with empty audio components
+					audio_updates = [None] * 10
+					yield tuple(
+						["\n\n---\n\n".join(f"Title: {s['title']}\n\n{s['script']}" for s in scripts)] +
+						audio_updates +
+						[f"Generated {len(scripts)}/{num_items} scripts..."]
+					)
+			except Exception as script_error:
+				logging.error(f"Error generating script {i+1}: {str(script_error)}")
+				status_messages.append(f"Failed to generate script {i+1}: {str(script_error)}")
+				continue
 		
+		if not scripts:
+			yield tuple(
+				["No scripts were generated successfully"] +
+				[None] * 10 +
+				["Failed to generate any scripts"]
+			)
+			return
+
 		# Process audio generation with progress updates
 		for i, script in enumerate(scripts):
-			valid, message = validate_text(script['script'])
-			if not valid:
-				status_messages.append(message)
+			try:
+				valid, message = validate_text(script['script'])
+				if not valid:
+					status_messages.append(message)
+					continue
+					
+				audio_path, status = await generate_audio(
+					api_key=api_key,
+					text=script['script'],
+					voice=voice,
+					tone_preset=tone_preset,
+					custom_tone=custom_tone
+				)
+				if audio_path:
+					audio_files.append(audio_path)
+					status_messages.append(status)
+					
+					# Update audio components
+					audio_updates = [None] * 10
+					for j in range(len(audio_files)):
+						if j < 10:
+							audio_updates[j] = audio_files[j]
+					
+					yield tuple(
+						["\n\n---\n\n".join(f"Title: {s['title']}\n\n{s['script']}" for s in scripts)] +
+						audio_updates +
+						[f"Processing {i+1}/{len(scripts)} scripts. {status_messages[-1] if status_messages else ''}"]
+					)
+			except Exception as audio_error:
+				logging.error(f"Error generating audio for script {i+1}: {str(audio_error)}")
+				status_messages.append(f"Failed to generate audio for script {i+1}: {str(audio_error)}")
 				continue
-				
-			audio_path, status = await generate_audio(
-				api_key=api_key,
-				text=script['script'],
-				voice=voice,
-				tone_preset=tone_preset,
-				custom_tone=custom_tone
-			)
-			if audio_path:
-				audio_files.append(audio_path)
-				status_messages.append(status)
-				
-				# Update audio components
-				audio_updates = [None] * 10
-				for j in range(len(audio_files)):
-					if j < 10:
-						audio_updates[j] = audio_files[j]
-				
-				yield tuple(["\n\n---\n\n".join(f"Title: {s['title']}\n\n{s['script']}" for s in scripts)] + 
-						   audio_updates + 
-						   [f"Script generation complete. Converting to audio: {i+1}/{len(scripts)} scripts. " + " ".join(status_messages[-1:])])
 		
-		final_status = f"Completed: Generated {len(scripts)} scripts and {len(audio_files)} audio files."
+		final_status = f"Completed: Generated {len(scripts)}/{num_items} scripts and {len(audio_files)} audio files."
 		if status_messages:
-			final_status += " Latest: " + status_messages[-1]
+			final_status += f" Latest: {status_messages[-1]}"
 		
 		# Final yield with all generated content
 		audio_updates = [None] * 10
@@ -147,12 +195,19 @@ async def handle_youtube_script(api_key, category, style, num_items, voice, tone
 			if j < 10:
 				audio_updates[j] = audio_files[j]
 		
-		yield tuple(["\n\n---\n\n".join(f"Title: {s['title']}\n\n{s['script']}" for s in scripts)] + 
-					audio_updates + 
-					[final_status])
+		yield tuple(
+			["\n\n---\n\n".join(f"Title: {s['title']}\n\n{s['script']}" for s in scripts)] +
+			audio_updates +
+			[final_status]
+		)
 			
 	except Exception as e:
-		yield tuple([f"Error generating script: {str(e)}"] + [None] * 10 + [str(e)])
+		logging.error(f"Error in handle_youtube_script: {str(e)}")
+		yield tuple(
+			[f"Error: {str(e)}"] +
+			[None] * 10 +
+			[str(e)]
+		)
 
 
 
