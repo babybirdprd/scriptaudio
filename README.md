@@ -18,6 +18,7 @@ A powerful application for generating high-quality audio content using Google's 
   - Casual: Natural and conversational
   - Custom: Define your own tone instructions
 - High-quality audio output (24kHz, 16-bit PCM)
+- Real-time audio playback with pygame
 - Audio quality validation with phoneme alignment
 
 ### Content Generation
@@ -43,7 +44,7 @@ source venv/bin/activate  # Unix/macOS
 
 2. Install dependencies:
 ```bash
-pip install google-genai gradio phonemizer wave
+pip install google-genai gradio phonemizer wave numpy pygame websockets
 ```
 
 3. Optional: Install espeak for audio quality validation:
@@ -52,7 +53,6 @@ pip install google-genai gradio phonemizer wave
 - macOS: `brew install espeak`
 
 4. Get your Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
-
 
 ## 💻 Usage
 
@@ -68,6 +68,7 @@ python combined_audio_generator.py
    - Choose tone preset or enter custom tone
    - Set content parameters
 5. Generate content and audio
+6. Listen to generated audio with real-time playback
 
 ## 📊 Technical Details
 
@@ -81,6 +82,7 @@ python combined_audio_generator.py
 - Output sample rate: 24kHz
 - Format: WAV, mono, 16-bit PCM
 - Session duration: 15 minutes max
+- Real-time playback using pygame
 
 ### Content Limits
 - Word count: 10-200 words
@@ -91,7 +93,7 @@ python combined_audio_generator.py
 
 Generated files are saved in the `generated_audio` directory:
 - Audio files: `voice-{name}-{number}.wav`
-- Metadata: `labels.json` with quality metrics
+- Metadata: `labels.json` with quality metrics and playback info
 
 ## ⚠️ Notes
 
@@ -99,6 +101,7 @@ Generated files are saved in the `generated_audio` directory:
 - All voices use strict text-to-speech mode
 - Tone presets modify speaking style while maintaining verbatim reading
 - Custom tones should follow the format: "TONE: [instruction]"
+- Real-time playback requires pygame installation
 
 ## 📄 License
 

@@ -1,19 +1,24 @@
 import asyncio
-import os
-import gradio as gr
+import base64
+import contextlib
+from datetime import datetime, date
+from difflib import SequenceMatcher
+import glob
 from google import genai
 from google.genai import types
-import logging
-from datetime import datetime, date
-import wave
-import glob
+import gradio as gr
 import json
-import random
-from datetime import datetime
-import typing_extensions as typing
-import re
+import logging
+import numpy as np
+import os
 import phonemizer
-from difflib import SequenceMatcher
+import pygame
+import random
+import re
+import typing_extensions as typing
+import wave
+import websockets
+
 
 # Configure logging
 logging.basicConfig(
@@ -56,40 +61,20 @@ FORMAT:
 - Content: Natural, conversational text
 - Length: 100-200 words'''
 
-MODEL_NAME = 'gemini-2.0-flash-exp'
+MODEL = 'models/gemini-2.0-flash-exp'
+HOST = 'generativelanguage.googleapis.com'
 
 # Audio configuration
-AUDIO_CONFIG = {
-	"generation_config": {
-		"response_modalities": ["AUDIO"],
-		"speech_config": {
-			"voice_config": {
-				"prebuilt_voice_config": {
-					"voice_name": "Puck"  # Default voice that works
-				}
-			}
-		}
-	},
-	"system_instruction": '''TEXT-TO-SPEECH MODE ONLY
-PURE VOICE SYNTHESIS
-NO AI FUNCTIONS
-NO TEXT ANALYSIS
-READ TEXT VERBATIM
+WAVE_CHANNELS = 1  # Mono audio
+WAVE_RATE = 24000  # 24kHz output
+WAVE_SAMPLE_WIDTH = 2  # 16-bit PCM
+INPUT_SAMPLE_RATE = 16000  # 16kHz for input
+ALIGNMENT_THRESHOLD = 0.8  # Minimum acceptable alignment score
+CHUNK_SIZE = 1024  # Audio buffer size
 
-RULES:
-1. READ TEXT ONLY
-2. NO EXTRA WORDS
-3. NO ANALYSIS
-4. NO HELP
-5. NO COMMENTS'''
-}
 
-INPUT_SAMPLE_RATE = 16000   # 16kHz for input
-OUTPUT_SAMPLE_RATE = 24000  # 24kHz for output
-AUDIO_CHANNELS = 1          # Mono audio
-AUDIO_SAMPLE_WIDTH = 2      # 16-bit PCM
-ALIGNMENT_THRESHOLD = 0.8   # Minimum acceptable alignment score
-CHUNK_SIZE = 1024          # Audio buffer size
+
+
 
 # API limits
 MAX_BATCH_SIZE = 100       # Based on rate limits
@@ -123,12 +108,8 @@ STATUS_MESSAGES = {
 	"error_session_timeout": "Session timeout after 15 minutes. Please start a new session."
 }
 
-INPUT_SAMPLE_RATE = 16000   # 16kHz for input
-OUTPUT_SAMPLE_RATE = 24000  # 24kHz for output
-AUDIO_CHANNELS = 1          # Mono audio
-AUDIO_SAMPLE_WIDTH = 2      # 16-bit PCM
-ALIGNMENT_THRESHOLD = 0.8   # Minimum acceptable alignment score
-CHUNK_SIZE = 1024          # Audio buffer size
+
+
 
 # Session management constants
 MAX_AUDIO_SESSION_DURATION = 15 * 60  # 15 minutes for audio sessions
@@ -241,14 +222,7 @@ async def batch_generate_audio(api_key, texts, voice, progress=gr.Progress()):
 		return None, f"Failed to generate any audio. Errors:\n{error_msg}"
 	
 	return results[0][0], f"Successfully generated {len(results)} audio files"
-	"""Generate audio for multiple texts in batch"""
-	results = []
-	for i, text in enumerate(texts):
-		progress(i/len(texts), desc=f"Processing text {i+1}/{len(texts)}")
-		audio_path, status = await generate_audio(api_key, text, voice)
-		if audio_path:
-			results.append((audio_path, status))
-	return results
+
 
 async def get_variable_replacement(client, variable):
 	"""Get contextual replacement for a variable"""
@@ -529,6 +503,31 @@ def validate_text(text: str) -> tuple[bool, str]:
 	
 	return True, ""
 
+@contextlib.contextmanager
+def wave_file(filename, channels=WAVE_CHANNELS, rate=WAVE_RATE, sample_width=WAVE_SAMPLE_WIDTH):
+	"""Context manager for creating and managing wave files."""
+	try:
+		with wave.open(filename, "wb") as wf:
+			wf.setnchannels(channels)
+			wf.setsampwidth(sample_width)
+			wf.setframerate(rate)
+			yield wf
+	except wave.Error as e:
+		print(f"Error opening wave file '{filename}': {e}")
+		raise
+
+async def audio_playback_task(file_name, stop_event):
+	"""Plays audio using pygame until stopped."""
+	try:
+		pygame.mixer.music.load(file_name)
+		pygame.mixer.music.play()
+		while pygame.mixer.music.get_busy() and not stop_event.is_set():
+			await asyncio.sleep(0.1)
+	except pygame.error as e:
+		print(f"Pygame error during playback: {e}")
+	except Exception as e:
+		print(f"Unexpected error during playback: {e}")
+
 def validate_batch_size(size: int) -> tuple[bool, str]:
 	"""Validate batch size"""
 	if size < 1:
@@ -537,40 +536,72 @@ def validate_batch_size(size: int) -> tuple[bool, str]:
 		return False, f"Batch size too large. Maximum is {MAX_BATCH_SIZE} items."
 	return True, ""
 
+def update_labels_file(wav_filepath: str, wav_filename: str, text: str, voice: str, audio_array: np.ndarray) -> None:
+    """Update the labels.json file with new audio metadata"""
+    try:
+        output_dir = os.path.dirname(wav_filepath)
+        labels_file = os.path.join(output_dir, 'labels.json')
+        
+        # Load existing labels or create new structure
+        if os.path.exists(labels_file):
+            with open(labels_file, 'r', encoding='utf-8') as f:
+                labels = json.load(f)
+        else:
+            labels = {"samples": []}
+
+        # Get audio duration from wave file
+        with wave.open(wav_filepath, 'rb') as wav:
+            frames = wav.getnframes()
+            rate = wav.getframerate()
+            duration = frames / float(rate)
+
+        # Create sample metadata
+        sample_data = {
+            "audio_file": wav_filename,
+            "text": text,
+            "duration": round(duration, 2),
+            "speaker_id": voice.lower(),
+            "timestamp": datetime.now().isoformat(),
+            "sample_rate": WAVE_RATE,
+            "channels": WAVE_CHANNELS,
+            "file_size": os.path.getsize(wav_filepath)
+        }
+
+        # Add alignment score if phonemizer is available
+        if HAS_PHONEMIZER:
+            alignment_score = align_phonemes(text, text)
+            sample_data.update({
+                "alignment_score": alignment_score,
+                "alignment_passed": validate_alignment(alignment_score)
+            })
+
+        # Add sample to labels
+        labels["samples"].append(sample_data)
+
+        # Save updated labels
+        with open(labels_file, 'w', encoding='utf-8') as f:
+            json.dump(labels, f, indent=2, ensure_ascii=False)
+
+    except Exception as e:
+        logging.error(f"Error updating labels file: {str(e)}")
+        raise
+
+
 # Improved audio generation
 async def generate_audio(api_key, text, voice, tone_preset="Default", custom_tone="", progress=gr.Progress()):
+	"""
+	Sends text input to the Gemini API, receives an audio response, saves it to a file, and plays it back.
+	"""
+	if not api_key:
+		return None, "API key is required"
+
+	# Check rate limits
 	can_proceed, error_msg = rate_limiter.check_and_update(len(text.split()))
 	if not can_proceed:
 		return None, error_msg
 
-	client = genai.Client(
-		api_key=api_key, 
-		http_options={
-			'api_version': 'v1alpha',
-			'timeout': 300,  # 5 minute timeout
-		}
-	)
-	MODEL = f"models/{MODEL_NAME}"
-
-	# Start with base audio config
-	config = AUDIO_CONFIG.copy()
-	config["generation_config"]["speech_config"]["voice_config"]["prebuilt_voice_config"]["voice_name"] = voice
-
-	# Add tone instructions to system message
-	base_system_message = AUDIO_CONFIG["system_instruction"]
-	tone_instruction = ""
+	URI = f'wss://{HOST}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={api_key}'
 	
-	if tone_preset == "Custom" and custom_tone.strip():
-		tone_instruction = f"\nTONE INSTRUCTION:\n{custom_tone}"
-	elif tone_preset in TONE_PRESETS:
-		preset_message = TONE_PRESETS[tone_preset]
-		tone_lines = [line for line in preset_message.split('\n') if 'TONE' in line]
-		if tone_lines:
-			tone_instruction = f"\nTONE INSTRUCTION:\n{tone_lines[0]}"
-	
-	config["system_instruction"] = base_system_message + tone_instruction
-
-
 	output_dir = 'generated_audio'
 	os.makedirs(output_dir, exist_ok=True)
 
@@ -579,85 +610,109 @@ async def generate_audio(api_key, text, voice, tone_preset="Default", custom_ton
 	wav_filepath = os.path.join(output_dir, wav_filename)
 
 	try:
-		start_time = datetime.now()
-		progress(0, desc=STATUS_MESSAGES["connecting"])
-		async with client.aio.live.connect(
-			model=MODEL,
-			config=config
-		) as session:
-			if (datetime.now() - start_time).total_seconds() > MAX_AUDIO_SESSION_DURATION:
-				return None, STATUS_MESSAGES["error_duration"]
-			
-			progress(0.2, desc=STATUS_MESSAGES["generating"])
-			await session.send(input=text, end_of_turn=True)
-			
-			audio_chunks = []
-			chunk_count = 0
-			async for response in session.receive():
-				if response.data:
-					chunk_count += 1
-					audio_chunks.append(response.data)
-					progress_value = min(0.2 + (0.6 * (chunk_count / 50)), 0.8)
-					progress(progress_value, desc=f"Generating audio... ({chunk_count} chunks)")
-				if response.text:
-					print(f"Text response: {response.text}")
-			
-			if not audio_chunks:
-				return None, STATUS_MESSAGES["error_no_audio"]
-			
-			progress(0.8, desc=STATUS_MESSAGES["saving"])
-			
-			with wave.open(wav_filepath, 'wb') as wav_file:
-				wav_file.setnchannels(AUDIO_CHANNELS)
-				wav_file.setsampwidth(AUDIO_SAMPLE_WIDTH)
-				wav_file.setframerate(OUTPUT_SAMPLE_RATE)
-				audio_data = b''.join(audio_chunks)
-				wav_file.writeframes(audio_data)
-			
-			# Update labels.json
-			labels_file = os.path.join(output_dir, 'labels.json')
-			if os.path.exists(labels_file):
-				with open(labels_file, 'r') as f:
-					labels = json.load(f)
-			else:
-				labels = {"samples": []}
-			
-			with wave.open(wav_filepath, 'rb') as wav:
-				frames = wav.getnframes()
-				rate = wav.getframerate()
-				duration = frames / float(rate)
-			
-			labels["samples"].append({
-				"audio_file": wav_filename,
-				"text": text,
-				"duration": round(duration, 2),
-				"speaker_id": voice.lower(),
-				"timestamp": datetime.now().isoformat()
-			})
-			
-			# Add alignment validation with user feedback
-			if audio_chunks:
-				alignment_score = align_phonemes(text, text)
-				if not validate_alignment(alignment_score):
-					print(f"Warning: Low alignment score ({alignment_score})")
-					return None, STATUS_MESSAGES["error_alignment"]
-				labels["samples"][-1]["alignment_score"] = alignment_score
-				labels["samples"][-1]["alignment_passed"] = validate_alignment(alignment_score)
-			
-			with open(labels_file, 'w') as f:
-				json.dump(labels, f, indent=2)
-			
-			progress(1.0, desc=STATUS_MESSAGES["complete"])
-			return wav_filepath, f"Audio generated successfully: {wav_filename}"
+		progress(0.1, desc="Connecting to API...")
+		async with websockets.connect(URI) as ws:
+			# Create config exactly as in example.txt
+			config = {
+				"response_modalities": ["AUDIO"],
+				"speech_config": {
+					"voice_config": {
+						"prebuilt_voice_config": {
+							"voice_name": voice
+						}
+					}
+				}
+			}
 
+			# Send setup message exactly as in example.txt
+			await ws.send(
+				json.dumps(
+					{
+						"setup": {
+							"model": MODEL,
+							"generation_config": config
+						}
+					}
+				)
+			)
+
+			raw_response = await ws.recv(decode=False)
+			setup_response = json.loads(raw_response.decode("ascii"))
+			progress(0.2, desc="Connected to API")
+
+			# Send text for audio generation exactly as in example.txt
+			msg = {
+				"clientContent": {
+					"turns": [{"role": "user", "parts": [{"text": text}]}],
+					"turnComplete": True
+				}
+			}
+			await ws.send(json.dumps(msg))
+
+
+
+
+			responses = []
+			async for raw_response in ws:
+				try:
+					response = json.loads(raw_response.decode())
+					server_content = response.get("serverContent")
+					if server_content is None:
+						break
+
+					model_turn = server_content.get("modelTurn")
+					if model_turn:
+						parts = model_turn.get("parts")
+						if parts:
+							for part in parts:
+								if "inlineData" in part and "data" in part["inlineData"]:
+									pcm_data = base64.b64decode(part["inlineData"]["data"])
+									responses.append(np.frombuffer(pcm_data, dtype=np.int16))
+									progress(0.5, desc="Generating audio...")
+
+					turn_complete = server_content.get("turnComplete")
+					if turn_complete:
+						break
+				except json.JSONDecodeError as e:
+					logging.error(f"JSON decode error: {str(e)}")
+					continue
+				except Exception as e:
+					logging.error(f"Error processing response: {str(e)}")
+					continue
+
+			if responses:
+				progress(0.9, desc="Saving audio file...")
+				audio_array = np.concatenate(responses)
+				with wave_file(wav_filepath) as wf:
+					wf.writeframes(audio_array.tobytes())
+				
+				# Update labels.json
+				update_labels_file(wav_filepath, wav_filename, text, voice, audio_array)
+				
+				# Initialize pygame for playback
+				pygame.mixer.init()
+				stop_event = asyncio.Event()
+				try:
+					await audio_playback_task(wav_filepath, stop_event)
+				except Exception as e:
+					print(f"Playback error: {e}")
+				finally:
+					pygame.mixer.quit()
+				
+				progress(1.0, desc="Audio generation complete")
+				return wav_filepath, f"Audio generated successfully: {wav_filename}"
+			else:
+				return None, STATUS_MESSAGES["error_no_audio"]
+
+
+	except websockets.exceptions.WebSocketException as e:
+		logging.error(f"WebSocket error: {str(e)}")
+		return None, f"WebSocket error: {str(e)}"
 	except Exception as e:
-		error_msg = str(e)
-		logging.error(f"Audio generation error: {error_msg}")
-		error_msg_lower = error_msg.lower()
-		for key, msg in STATUS_MESSAGES.items():
-			if key.startswith("error_") and key[6:] in error_msg_lower:
-				return None, msg
-		return None, f"Error: {error_msg}"
+		logging.error(f"Error generating audio: {str(e)}")
+		return None, f"Error generating audio: {str(e)}"
+
+
 
 
 
