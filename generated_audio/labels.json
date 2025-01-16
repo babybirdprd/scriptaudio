@@ -2,63 +2,51 @@
   "samples": [
     {
       "audio_file": "voice-puck-000.wav",
-      "text": "Hey everyone! Ever stop to think about how much technology is woven into our everyday routines? It's kind of mind-blowing! From the moment our alarms probably on our phones! wake us up, to the shows we stream before bed, tech is constantly shaping our experiences. Think about it: we use apps to order coffee, navigate traffic, and even connect with friends across the globe. It's not just about fancy gadgets either; simple tools like email and even online banking are all powered by tech. It can be easy to take for granted, but it's undeniable that technology has fundamentally changed how we live, work, and interact with the world. And it’s probably going to continue to evolve! So, next time you're using your phone or computer, take a moment to appreciate the invisible web of technology supporting so much of what we do.",
-      "duration": 45.04,
+      "text": "Alright tech fanatics, buckle up because we're diving headfirst into the hottest gadgets on the planet! Today, we’re unboxing the brand new Nova X phone, and let me tell you, this thing is a BEAST. The camera? Insane. The processor? Lightning fast. And the screen? Prepare to be mesmerized! We’ll be putting it through its paces, testing its gaming capabilities, battery life, and all the other juicy bits you need to know. Next up, we’re checking out a revolutionary pair of headphones that will completely change your listening experience. Think immersive sound and unmatched comfort. But the real question is, are they worth the hype? Stay tuned to find out! This is the tech you absolutely need to know about. If you’re as excited as I am, smash that like button, subscribe, and let me know in the comments which gadget you’re most hyped for!",
+      "duration": 49.04,
       "speaker_id": "puck",
       "tone_preset": "Default",
       "custom_tone": null,
-      "timestamp": "2025-01-16T03:39:13.459616",
+      "timestamp": "2025-01-16T05:20:57.741665",
       "sample_rate": 24000,
       "channels": 1,
-      "file_size": 2161964
+      "file_size": 2353964
+    },
+    {
+      "audio_file": "voice-puck-000.wav",
+      "text": "Technology is no longer a futuristic concept; it’s the very fabric of our daily routines. From the smartphones in our pockets to the sophisticated systems that manage our cities, its influence is pervasive. We see its impact in communication, where instant global connections are commonplace. In education, online learning platforms offer unparalleled access to knowledge. Healthcare benefits immensely with advanced diagnostics and treatment options. However, this rapid evolution also presents challenges. Concerns about data privacy and the digital divide are valid and require addressing. Navigating this ever-changing landscape requires a critical and informed approach. The key lies in harnessing technology's power for the betterment of society while remaining aware of its potential pitfalls.",
+      "duration": 45.68,
+      "speaker_id": "puck",
+      "tone_preset": "Default",
+      "custom_tone": null,
+      "timestamp": "2025-01-16T05:21:11.251974",
+      "sample_rate": 24000,
+      "channels": 1,
+      "file_size": 2192684
     },
     {
       "audio_file": "voice-puck-001.wav",
-      "text": "What's up, techies! Today we're diving headfirst into the world of budget gaming headsets, and let me tell you, this one might just blow your mind. I’ve been putting the HyperX Cloud Stinger Core through its paces, and for the price, I’m seriously impressed. The sound quality is surprisingly crisp, the mic is clear for comms, and the comfort? I've had this thing on for hours without any pain. Seriously, for under 50 bucks this headset punches way above its weight class. We’re talking killer performance without breaking the bank! If you're looking for a great budget option, definitely check out the link in the description for all the details. And hey, if you've tried it, let me know your thoughts in the comments below! Don’t forget to subscribe for more awesome tech reviews.",
-      "duration": 39.52,
+      "text": "Are you ready for the future? Because I just got my hands on something that will absolutely blow your mind! We're diving headfirst into the brand new Nova X5000, and let me tell you, this isn't just another gadget. The processing speeds are insane, the display is unbelievably vibrant, and the battery life? Forget about it, it lasts for days! Seriously, I’ve pushed this thing to its absolute limits, and it just keeps going. I’m going to show you all the awesome features, from the revolutionary camera to the seamless user interface. We’re even putting it up against its biggest competitor. Prepare to be amazed because this is a game changer. Don't forget to smash that subscribe button for more awesome tech reviews and hit that like button if you're as excited as I am. Let me know in the comments what you think!",
+      "duration": 41.36,
       "speaker_id": "puck",
       "tone_preset": "Default",
       "custom_tone": null,
-      "timestamp": "2025-01-16T04:47:03.186724",
+      "timestamp": "2025-01-16T05:21:39.890402",
       "sample_rate": 24000,
       "channels": 1,
-      "file_size": 1897004
+      "file_size": 1985324
     },
     {
-      "audio_file": "voice-puck-002.wav",
-      "text": "Hey everyone! Ever stop to think about how much technology is woven into our daily lives? It's pretty amazing, actually. From the moment our alarm clocks go off probably on our phones!, to the way we connect with friends and family, tech is there. It's not just about the gadgets though, it's about how they make things easier and more accessible. Think about online banking, grocery delivery, or even learning a new skill through an app. These tools, often right at our fingertips, have transformed how we work, play, and learn. While it can sometimes feel overwhelming, it's hard to deny the positive impact technology has had. So next time you're scrolling through your feed or video calling a loved one, take a moment to appreciate the amazing world we live in, thanks to tech!",
-      "duration": 41.88,
+      "audio_file": "voice-puck-001.wav",
+      "text": "Technology constantly reshapes our world, impacting how we live, work, and connect. From smartphones that keep us instantly informed to artificial intelligence powering complex systems, innovation is relentless. We see automation transforming industries, enhancing efficiency but also raising important questions about the future of work. Simultaneously, advancements in healthcare technologies are extending lifespans and improving the quality of life for many. This rapid pace of change demands continuous adaptation, emphasizing the importance of digital literacy and critical thinking. Navigating this evolving landscape requires a mindful approach, acknowledging both the incredible potential and the potential challenges these new tools bring.",
+      "duration": 43.32,
       "speaker_id": "puck",
       "tone_preset": "Default",
       "custom_tone": null,
-      "timestamp": "2025-01-16T04:48:01.040686",
+      "timestamp": "2025-01-16T05:21:55.331542",
       "sample_rate": 24000,
       "channels": 1,
-      "file_size": 2010284
-    },
-    {
-      "audio_file": "voice-puck-003.wav",
-      "text": "Hey everyone! Let's take a quick peek at how technology is woven into the fabric of our lives. It's not just about the latest gadgets; it's the small things. Think about how easily we stay connected with family across the globe thanks to video calls, or how quickly we can find information with a simple search. Even things like online grocery shopping make our routines smoother. \n\nThese everyday tech moments are shaping how we live, learn, and interact. We're not talking about complicated coding here, but rather the intuitive tools that simplify our tasks. From quick reminders on our phones to map apps guiding us on our journey, these small technological advances make our world a bit easier and more efficient. \n\nTechnology is constantly evolving, and it's pretty amazing to see how these changes impact even the smallest aspects of our daily lives. What are some of your favorite everyday tech conveniences?",
-      "duration": 47.8,
-      "speaker_id": "puck",
-      "tone_preset": "Default",
-      "custom_tone": null,
-      "timestamp": "2025-01-16T04:48:49.558854",
-      "sample_rate": 24000,
-      "channels": 1,
-      "file_size": 2294444
-    },
-    {
-      "audio_file": "voice-puck-004.wav",
-      "text": "Hey everyone! Ever stopped to think about how much technology we use daily? It's way more than just the phones in our pockets. It's in our kitchens, helping us cook. It's in our cars, getting us where we need to go. And it's definitely in the way we connect with friends and family. \n\nTechnology isn't just about the newest, flashiest device. It's about making our lives easier and more efficient. Think about online banking, or GPS apps, or even just the humble washing machine. These are all examples of tech quietly improving our routines. It's amazing how far we've come! \n\nSo next time you're using your favourite app or a clever kitchen gadget, remember that technology is everywhere, shaping our world in so many ways. It's a pretty cool thing, wouldn't you say?",
-      "duration": 43.04,
-      "speaker_id": "puck",
-      "tone_preset": "Default",
-      "custom_tone": null,
-      "timestamp": "2025-01-16T04:49:33.418561",
-      "sample_rate": 24000,
-      "channels": 1,
-      "file_size": 2065964
+      "file_size": 2079404
     }
   ]
 }

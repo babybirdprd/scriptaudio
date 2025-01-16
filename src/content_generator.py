@@ -8,7 +8,7 @@ async def generate_youtube_script(api_key: str, category: str, style: str) -> di
 	"""Generate a YouTube script with specified category and style"""
 	client = genai.Client(api_key=api_key)
 	
-	prompt = f"""Create a YouTube script for {category} in {style} style.
+	prompt = f"""Create a {style} YouTube script about {category}.
 Format the response as JSON with exactly this structure:
 {{
 	"title": "Video Title Here",
@@ -16,12 +16,13 @@ Format the response as JSON with exactly this structure:
 }}
 
 Requirements:
-- Natural, conversational script
+- Clear structure with main points and conclusion
+- No greetings or introductory phrases like 'Hey everyone'
 - No stage directions or actions in parentheses
 - No all-caps words
 - No emojis or special characters
 - 100-200 words
-- Include hook, main content, and call to action
+- Include hook and call to action
 - Return ONLY valid JSON, no other text"""
 	
 	try:
@@ -79,9 +80,9 @@ async def generate_content(api_key: str, content_type: str, niche: str) -> dict:
 	
 	prompt = f"""Create a {content_type} about {niche}.
 Requirements:
-- Natural, conversational style
+- Clear structure with main points and conclusion
+- No greetings or introductory phrases
 - 100-200 words
-- Clear structure with introduction, main points, and conclusion
 - Engaging and informative tone
 - No technical jargon unless necessary
 - Include a clear title

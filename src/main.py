@@ -23,13 +23,17 @@ async def handle_script_only(api_key, category, style, num_items):
 		scripts = []
 		for i in range(int(num_items)):
 			script = await generate_youtube_script(api_key, category, style)
-			scripts.append(script)
+			if script and 'title' in script and 'script' in script:
+				scripts.append(script)
 		
+		if not scripts:
+			return "No scripts were generated successfully", "Failed to generate scripts"
+			
 		combined_text = "\n\n---\n\n".join(
 			f"Title: {s['title']}\n\n{s['script']}" 
 			for s in scripts
 		)
-		return combined_text, "Generated scripts successfully"
+		return combined_text, f"Generated {len(scripts)} scripts successfully"
 	except Exception as e:
 		return f"Error generating scripts: {str(e)}", str(e)
 
@@ -330,7 +334,7 @@ with gr.Blocks(title="Audio Content Generator") as app:
 					label="Script Style",
 					value="energetic and enthusiastic"
 				)
-				num_items = gr.Slider(
+				youtube_num_items = gr.Slider(
 					minimum=1,
 					maximum=MAX_BATCH_SIZE,
 					value=1,
@@ -365,7 +369,7 @@ with gr.Blocks(title="Audio Content Generator") as app:
 					label="Subject/Niche",
 					value="Technology"
 				)
-				num_items = gr.Slider(
+				content_num_items = gr.Slider(
 					minimum=1,
 					maximum=MAX_BATCH_SIZE,
 					value=1,
@@ -453,7 +457,7 @@ with gr.Blocks(title="Audio Content Generator") as app:
 
 	generate_content_only_btn.click(
 		fn=handle_content_only,
-		inputs=[api_key, content_type, niche, num_items],
+		inputs=[api_key, content_type, niche, content_num_items],
 		outputs=[content_output, status_output]
 	)
 
@@ -465,14 +469,14 @@ with gr.Blocks(title="Audio Content Generator") as app:
 
 	generate_content_both_btn.click(
 		fn=handle_content_generation,
-		inputs=[api_key, content_type, niche, num_items, voice, tone_preset, custom_tone],
+		inputs=[api_key, content_type, niche, content_num_items, voice, tone_preset, custom_tone],
 		outputs=[content_output] + audio_components + [status_output],
 		show_progress=True
 	)
 
 	generate_script_only_btn.click(
 		fn=handle_script_only,
-		inputs=[api_key, category, style, num_items],
+		inputs=[api_key, category, style, youtube_num_items],
 		outputs=[script_output, status_output]
 	)
 
@@ -484,7 +488,7 @@ with gr.Blocks(title="Audio Content Generator") as app:
 
 	generate_both_btn.click(
 		fn=handle_youtube_script,
-		inputs=[api_key, category, style, num_items, voice, tone_preset, custom_tone],
+		inputs=[api_key, category, style, youtube_num_items, voice, tone_preset, custom_tone],
 		outputs=[script_output] + audio_components + [status_output],
 		show_progress=True
 	)
