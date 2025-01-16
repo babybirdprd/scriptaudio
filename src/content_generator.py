@@ -21,7 +21,7 @@ Requirements:
 - No stage directions or actions in parentheses
 - No all-caps words
 - No emojis or special characters
-- 100-200 words
+- 75-150 words
 - Include hook and call to action
 - Return ONLY valid JSON, no other text"""
 	
