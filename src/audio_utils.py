@@ -47,7 +47,7 @@ def get_next_file_number(output_dir, voice):
 	numbers = [int(f.split('-')[-1].split('.')[0]) for f in existing_files]
 	return max(numbers) + 1 if numbers else 0
 
-def update_labels_file(wav_filepath: str, wav_filename: str, text: str, voice: str, audio_array: np.ndarray) -> None:
+def update_labels_file(wav_filepath: str, wav_filename: str, text: str, voice: str, audio_array: np.ndarray, tone_preset: str = "Default", custom_tone: str = "") -> None:
 	"""Update the labels.json file with new audio metadata"""
 	try:
 		output_dir = os.path.dirname(wav_filepath)
@@ -69,6 +69,8 @@ def update_labels_file(wav_filepath: str, wav_filename: str, text: str, voice: s
 			"text": text,
 			"duration": round(duration, 2),
 			"speaker_id": voice.lower(),
+			"tone_preset": tone_preset,
+			"custom_tone": custom_tone if custom_tone else None,
 			"timestamp": datetime.now().isoformat(),
 			"sample_rate": WAVE_RATE,
 			"channels": WAVE_CHANNELS,
@@ -176,7 +178,7 @@ async def generate_audio(api_key, text, voice, tone_preset="Default", custom_ton
 				with wave_file(wav_filepath) as wf:
 					wf.writeframes(audio_array.tobytes())
 				
-				update_labels_file(wav_filepath, wav_filename, text, voice, audio_array)
+				update_labels_file(wav_filepath, wav_filename, text, voice, audio_array, tone_preset, custom_tone)
 				
 				if progress:
 
