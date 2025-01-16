@@ -7,8 +7,8 @@ import numpy as np
 
 import os
 import glob
-import pygame
 import wave
+
 import websockets
 from datetime import datetime
 from .config import *
@@ -129,7 +129,12 @@ async def generate_audio(api_key, text, voice, tone_preset="Default", custom_ton
 
 			msg = {
 				"clientContent": {
-					"turns": [{"role": "user", "parts": [{"text": text}]}],
+					"turns": [{
+						"role": "user", 
+						"parts": [{
+							"text": f"INSTRUCTION: Read the following text verbatim, word for word, without responding to it as if in conversation. Do not add any commentary, responses, or modifications. Simply read exactly what is provided:\n\n{text}"
+						}]
+					}],
 					"turnComplete": True
 				}
 			}
@@ -173,16 +178,8 @@ async def generate_audio(api_key, text, voice, tone_preset="Default", custom_ton
 				
 				update_labels_file(wav_filepath, wav_filename, text, voice, audio_array)
 				
-				pygame.mixer.init()
-				stop_event = asyncio.Event()
-				try:
-					await audio_playback_task(wav_filepath, stop_event)
-				except Exception as e:
-					logging.error(f"Playback error: {e}")
-				finally:
-					pygame.mixer.quit()
-				
 				if progress:
+
 					progress(1.0, desc=STATUS_MESSAGES["complete"])
 					
 				return wav_filepath, f"Audio generated successfully: {wav_filename}"
