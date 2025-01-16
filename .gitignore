@@ -1,4 +1,4 @@
 venv
 src\__pycache__
 __pycache__
-api_usage_log
+api_usage.log
