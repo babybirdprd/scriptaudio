@@ -20,8 +20,18 @@ logging.basicConfig(
 
 async def handle_script_only(api_key, category, style, num_items):
 	try:
+		batch_id = f"script_only_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 		scripts = []
+		status_messages = []
+		
 		for i in range(int(num_items)):
+			# Check rate limits with batch tracking
+			valid, message = await rate_limiter.check_and_update(tokens=0, batch_id=batch_id)
+			if not valid:
+				return f"Error: {message}", message
+			elif message:
+				status_messages.append(message)
+			
 			script = await generate_youtube_script(api_key, category, style)
 			if script and 'title' in script and 'script' in script:
 				scripts.append(script)
@@ -33,7 +43,10 @@ async def handle_script_only(api_key, category, style, num_items):
 			f"Title: {s['title']}\n\n{s['script']}" 
 			for s in scripts
 		)
-		return combined_text, f"Generated {len(scripts)} scripts successfully"
+		status = f"Generated {len(scripts)} scripts successfully"
+		if status_messages:
+			status += f" (with rate limiting delays)"
+		return combined_text, status
 	except Exception as e:
 		return f"Error generating scripts: {str(e)}", str(e)
 
@@ -42,7 +55,7 @@ async def handle_audio_only(api_key, script_text, voice, tone_preset, custom_ton
 		if not script_text:
 			return tuple([None] * 10 + ["No script provided"])
 			
-		# Split scripts by separator and process each separately
+		batch_id = f"audio_only_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 		scripts = script_text.split("---")
 		audio_files = []
 		status_messages = []
@@ -59,6 +72,14 @@ async def handle_audio_only(api_key, script_text, voice, tone_preset, custom_ton
 			if not valid:
 				status_messages.append(message)
 				continue
+			
+			# Check rate limits before audio generation
+			valid, message = await rate_limiter.check_and_update(tokens=0, batch_id=batch_id)
+			if not valid:
+				status_messages.append(message)
+				break
+			elif message:
+				status_messages.append(message)
 				
 			audio_path, status = await generate_audio(
 				api_key=api_key,
@@ -80,7 +101,9 @@ async def handle_audio_only(api_key, script_text, voice, tone_preset, custom_ton
 			if j < 10:
 				audio_updates[j] = audio_files[j]
 		
-		status = f"Generated {len(audio_files)} audio files. " + " ".join(status_messages)
+		status = f"Generated {len(audio_files)} audio files."
+		if status_messages:
+			status += " " + " ".join(status_messages)
 		return tuple(audio_updates + [status])
 	except Exception as e:
 		return tuple([None] * 10 + [str(e)])
@@ -121,7 +144,7 @@ async def handle_youtube_script(api_key, category, style, num_items, voice, tone
 		for i in range(int(num_items)):
 			try:
 				# Check rate limits with batch tracking
-				valid, message = rate_limiter.check_and_update(tokens=0, batch_id=batch_id)
+				valid, message = await rate_limiter.check_and_update(tokens=0, batch_id=batch_id)
 				if not valid:
 					status_messages.append(message)
 					yield tuple(
@@ -130,6 +153,13 @@ async def handle_youtube_script(api_key, category, style, num_items, voice, tone
 						[message]
 					)
 					return
+				elif message:  # Rate limit delay message
+					status_messages.append(message)
+					yield tuple(
+						["\n\n---\n\n".join(f"Title: {s['title']}\n\n{s['script']}" for s in scripts)] +
+						[None] * 10 +
+						[f"Processing {i+1}/{num_items} scripts. {message}"]
+					)
 
 				script = await generate_youtube_script(api_key, category, style)
 				if script and 'title' in script and 'script' in script:
@@ -217,8 +247,18 @@ async def handle_youtube_script(api_key, category, style, num_items, voice, tone
 
 async def handle_content_only(api_key, content_type, niche, num_items):
 	try:
+		batch_id = f"content_only_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 		all_content = []
+		status_messages = []
+		
 		for i in range(int(num_items)):
+			# Check rate limits with batch tracking
+			valid, message = await rate_limiter.check_and_update(tokens=0, batch_id=batch_id)
+			if not valid:
+				return f"Error: {message}", message
+			elif message:
+				status_messages.append(message)
+			
 			content = await generate_content(api_key, content_type, niche)
 			all_content.append(content)
 		
@@ -226,18 +266,40 @@ async def handle_content_only(api_key, content_type, niche, num_items):
 			f"Title: {c['title']}\n\n{c['text']}" 
 			for c in all_content
 		)
-		return combined_text, "Generated content successfully"
+		status = "Generated content successfully"
+		if status_messages:
+			status += f" (with rate limiting delays)"
+		return combined_text, status
 	except Exception as e:
 		return f"Error: {str(e)}", str(e)
 
 async def handle_content_generation(api_key, content_type, niche, num_items, voice, tone_preset, custom_tone):
 	try:
+		batch_id = f"content_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 		all_content = []
 		audio_files = []
 		status_messages = []
 		
 		# Generate content with progress updates
 		for i in range(int(num_items)):
+			# Check rate limits with batch tracking
+			valid, message = await rate_limiter.check_and_update(tokens=0, batch_id=batch_id)
+			if not valid:
+				status_messages.append(message)
+				yield tuple(
+					["\n\n---\n\n".join(f"Title: {c['title']}\n\n{c['text']}" for c in all_content)] +
+					[None] * 10 +
+					[message]
+				)
+				return
+			elif message:  # Rate limit delay message
+				status_messages.append(message)
+				yield tuple(
+					["\n\n---\n\n".join(f"Title: {c['title']}\n\n{c['text']}" for c in all_content)] +
+					[None] * 10 +
+					[f"Processing {i+1}/{num_items} items. {message}"]
+				)
+
 			content = await generate_content(api_key, content_type, niche)
 			if content['text']:
 				all_content.append(content)

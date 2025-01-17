@@ -17,7 +17,7 @@ Format the response as JSON with exactly this structure:
 
 Requirements:
 - Clear structure with main points and conclusion
-- No greetings or introductory phrases like 'Hey everyone'
+- No generic greetings or introductory phrases like 'Hey everyone'
 - No stage directions or actions in parentheses
 - No all-caps words
 - No emojis or special characters
@@ -82,7 +82,7 @@ async def generate_content(api_key: str, content_type: str, niche: str) -> dict:
 Requirements:
 - Clear structure with main points and conclusion
 - No greetings or introductory phrases
-- 100-200 words
+- 50-100 words
 - Engaging and informative tone
 - No technical jargon unless necessary
 - Include a clear title

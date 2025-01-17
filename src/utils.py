@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import glob
@@ -14,7 +15,7 @@ class RateLimit:
 		self.batch_requests = {}  # Track batch requests
 		logging.info("Rate limiter initialized")
 	
-	def check_and_update(self, tokens: int = 0, batch_id: str = None) -> tuple[bool, str]:
+	async def check_and_update(self, tokens: int = 0, batch_id: str = None) -> tuple[bool, str]:
 		now = datetime.now()
 		
 		# Reset counters if minute has passed
@@ -23,7 +24,7 @@ class RateLimit:
 			self.requests = 0
 			self.tokens = 0
 			self.last_reset = now
-			self.batch_requests = {}  # Reset batch tracking
+			self.batch_requests = {}
 		
 		# Reset daily counter if day has changed
 		if now.date() != self.daily_reset:
@@ -36,21 +37,32 @@ class RateLimit:
 			if batch_id not in self.batch_requests:
 				self.batch_requests[batch_id] = 0
 			self.batch_requests[batch_id] += 1
-			
-			# Check batch-specific limits
-			if self.batch_requests[batch_id] > MAX_BATCH_SIZE:
-				logging.warning(f"Batch limit exceeded for {batch_id}: {self.batch_requests[batch_id]}/{MAX_BATCH_SIZE}")
-				return False, f"Batch limit exceeded: {MAX_BATCH_SIZE} items per batch"
 		
-		# Check general limits
+		# Calculate delays based on current usage
+		delay = 0
+		message = ""
+		
 		if self.requests >= RATE_LIMIT_RPM:
-			logging.warning(f"Rate limit exceeded: {self.requests}/{RATE_LIMIT_RPM} RPM")
-			return False, f"Rate limit exceeded: {RATE_LIMIT_RPM} requests per minute"
+			delay = 60 - (now - self.last_reset).total_seconds()
+			message = f"Rate limit approaching: Waiting {delay:.1f} seconds"
+			logging.info(message)
+			await asyncio.sleep(delay)
+			# Reset counters after delay
+			self.requests = 0
+			self.tokens = 0
+			self.last_reset = datetime.now()
+			
 		if self.tokens + tokens >= RATE_LIMIT_TPM:
-			logging.warning(f"Token limit exceeded: {self.tokens + tokens}/{RATE_LIMIT_TPM} TPM")
-			return False, f"Token limit exceeded: {RATE_LIMIT_TPM} tokens per minute"
+			delay = 60 - (now - self.last_reset).total_seconds()
+			message = f"Token limit approaching: Waiting {delay:.1f} seconds"
+			logging.info(message)
+			await asyncio.sleep(delay)
+			# Reset counters after delay
+			self.requests = 0
+			self.tokens = 0
+			self.last_reset = datetime.now()
+			
 		if self.daily_requests >= RATE_LIMIT_RPD:
-			logging.warning(f"Daily limit exceeded: {self.daily_requests}/{RATE_LIMIT_RPD} RPD")
 			return False, f"Daily limit exceeded: {RATE_LIMIT_RPD} requests per day"
 		
 		# Update counters
@@ -58,7 +70,8 @@ class RateLimit:
 		self.tokens += tokens
 		self.daily_requests += 1
 		logging.info(f"API request - Minute: {self.requests}/{RATE_LIMIT_RPM}, Tokens: {self.tokens}/{RATE_LIMIT_TPM}, Day: {self.daily_requests}/{RATE_LIMIT_RPD}")
-		return True, ""
+		
+		return True, message if message else ""
 
 def validate_text(text: str) -> tuple[bool, str]:
 	"""Validate text input"""
